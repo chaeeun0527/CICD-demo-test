@@ -36,7 +36,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          IMAGE_URI={289880681074.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-repo}:latest  # 사용할 Docker 이미지 태그 정의
+          IMAGE_URI=289880681074.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-repo:latest  # 사용할 Docker 이미지 태그 정의
           docker build -t $IMAGE_URI .  # 현재 디렉토리(.)에 있는 Dockerfile을 기준으로 이미지 빌드
           docker push $IMAGE_URI  # 빌드한 이미지를 ECR에 push (업로드)
 
@@ -48,7 +48,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}  # base64로 인코딩된 pem 키 (GitHub Secrets에 등록된 값)
           script: |
             aws ecr get-login-password --region ap-northeast-2 | \
-            docker login --username AWS --password-stdin <ECR URL> 
-            docker pull <ECR URL>:latest
+            docker login --username AWS --password-stdin 289880681074.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-repo
+            docker pull 289880681074.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-repo:latest
             docker stop app || true && docker rm app || true
-            docker run -d --name app -p 8080:8080 <ECR URL>:latest
+            docker run -d --name app -p 8080:8080 289880681074.dkr.ecr.ap-northeast-2.amazonaws.com/my-backend-repo:latest
